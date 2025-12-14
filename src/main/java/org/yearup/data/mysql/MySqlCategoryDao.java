@@ -34,7 +34,7 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao {
                 categories.add(mapRow(resultSet));
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error retrieving categories.");
+            throw new RuntimeException(e);
         }
 
         return categories;
@@ -42,7 +42,22 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao {
 
     @Override
     public Category getById(int categoryId) {
-        // get category by id
+        String getByIdQuery = "SELECT * FROM categories WHERE category_id = ?";
+
+        try (Connection connection = getConnection();
+             PreparedStatement selectStatement = connection.prepareStatement(getByIdQuery)) {
+
+            selectStatement.setInt(1, categoryId);
+
+            try (ResultSet resultSet = selectStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    return mapRow(resultSet);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error retrieving categories with ID: " + categoryId, e);
+        }
+
         return null;
     }
 
