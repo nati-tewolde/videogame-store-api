@@ -6,10 +6,7 @@ import org.yearup.data.CategoryDao;
 import org.yearup.models.Category;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,7 +52,7 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error retrieving categories with ID: " + categoryId, e);
+            throw new RuntimeException("Error retrieving categories with ID: " + categoryId);
         }
 
         return null;
@@ -63,8 +60,30 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao {
 
     @Override
     public Category create(Category category) {
-        // create a new category
-        return null;
+        String insertQuery = "INSERT INTO categories (name, description) VALUES (?, ?)";
+        try (Connection connection = getConnection();
+             PreparedStatement insertStatement = connection.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS)) {
+
+            insertStatement.setString(1, category.getName());
+            insertStatement.setString(2, category.getDescription());
+
+            int affectedRows = insertStatement.executeUpdate();
+            if (affectedRows == 0) {
+                throw new SQLException("Creating category failed, no rows affected.");
+            }
+
+            try (ResultSet generatedKeys = insertStatement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    int generatedId = generatedKeys.getInt(1);
+                    category.setCategoryId(generatedId);
+                } else {
+                    throw new SQLException("Creating category failed, no ID obtained.");
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error creating category.");
+        }
+        return category;
     }
 
     @Override
