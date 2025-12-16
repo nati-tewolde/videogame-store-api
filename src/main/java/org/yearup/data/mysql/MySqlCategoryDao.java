@@ -52,7 +52,7 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error retrieving categories with ID: " + categoryId);
+            throw new RuntimeException(e);
         }
 
         return null;
@@ -81,19 +81,44 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error creating category.");
+            throw new RuntimeException(e);
         }
         return category;
     }
 
     @Override
     public void update(int categoryId, Category category) {
-        // update category
+        String updateQuery = "UPDATE categories SET name = ?, description = ? WHERE category_id = ?";
+
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(updateQuery)) {
+
+            statement.setString(1, category.getName());
+            statement.setString(2, category.getDescription());
+            statement.setInt(3, categoryId);
+
+            int rowsAffected = statement.executeUpdate();
+            if (rowsAffected == 0) {
+                throw new SQLException("Updating category failed.");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public void delete(int categoryId) {
-        // delete category
+        String deleteQuery = "DELETE FROM categories WHERE category_id = ?";
+
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(deleteQuery)) {
+
+            statement.setInt(1, categoryId);
+
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private Category mapRow(ResultSet row) throws SQLException {

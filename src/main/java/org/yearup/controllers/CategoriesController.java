@@ -69,16 +69,35 @@ public class CategoriesController {
         }
     }
 
-    // add annotation to call this method for a PUT (update) action - the url path must include the categoryId
-    // add annotation to ensure that only an ADMIN can call this function
+    @PutMapping("{id}")
+    // @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void updateCategory(@PathVariable int id, @RequestBody Category category) {
-        // update the category by id
+        try {
+            Category existingCategory = categoryDao.getById(id);
+            if (existingCategory == null) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found");
+            }
+
+            categoryDao.update(id, category);
+        } catch (Exception ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
+        }
     }
 
-
-    // add annotation to call this method for a DELETE action - the url path must include the categoryId
-    // add annotation to ensure that only an ADMIN can call this function
+    @DeleteMapping("{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void deleteCategory(@PathVariable int id) {
-        // delete the category by id
+        try {
+            Category category = categoryDao.getById(id);
+            if (category == null) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found");
+            }
+
+            categoryDao.delete(id);
+        } catch (Exception ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
+        }
     }
 }
