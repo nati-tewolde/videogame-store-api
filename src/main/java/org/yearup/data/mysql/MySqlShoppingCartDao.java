@@ -59,7 +59,6 @@ public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDa
 
     @Override
     public void addProductToCart(int userId, int productId) {
-        // Query to check if product exists in cart
         String checkQuery = "SELECT quantity FROM shopping_cart WHERE user_id = ? AND product_id = ?";
 
         try (Connection connection = getConnection();
@@ -71,7 +70,7 @@ public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDa
             try (ResultSet resultSet = checkStatement.executeQuery()) {
                 if (resultSet.next()) {
                     int currentQuantity = resultSet.getInt("quantity");
-                    // Call update method
+                    updateProductQuantity(userId, productId, currentQuantity + 1);
                 } else {
                     String insertQuery = "INSERT INTO shopping_cart (user_id, product_id, quantity) VALUES (?, ?, 1)";
 
@@ -90,7 +89,22 @@ public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDa
 
     @Override
     public void updateProductQuantity(int userId, int productId, int quantity) {
+        String updateQuery = "UPDATE shopping_cart SET quantity = ? WHERE user_id = ? AND product_id = ?";
 
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(updateQuery)) {
+
+            statement.setInt(1, quantity);
+            statement.setInt(2, userId);
+            statement.setInt(3, productId);
+
+            int rowsAffected = statement.executeUpdate();
+            if (rowsAffected == 0) {
+                throw new SQLException("Updating product failed.");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

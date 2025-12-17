@@ -48,6 +48,7 @@ public class CategoriesController {
     public List<Product> getProductsById(@PathVariable int categoryId) {
         try {
             Category category = categoryDao.getById(categoryId);
+
             if (category == null) {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found");
             }
