@@ -63,7 +63,6 @@ public class ProductsController {
     }
 
     @PutMapping("{id}")
-    // @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void updateProduct(@PathVariable int id, @RequestBody Product product) {
         try {
