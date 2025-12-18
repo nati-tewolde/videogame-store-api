@@ -18,6 +18,12 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao {
         super(dataSource);
     }
 
+    /**
+     * Retrieves all categories from the database.
+     *
+     * @return a list of all categories
+     * @throws RuntimeException if a database error occurs
+     */
     @Override
     public List<Category> getAllCategories() {
         List<Category> categories = new ArrayList<>();
@@ -38,6 +44,13 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao {
         return categories;
     }
 
+    /**
+     * Retrieves a category by its ID.
+     *
+     * @param categoryId the ID of the category to retrieve
+     * @return the category with the specified ID, or null if not found
+     * @throws RuntimeException if a database error occurs
+     */
     @Override
     public Category getById(int categoryId) {
         String getByIdQuery = "SELECT * FROM categories WHERE category_id = ?";
@@ -59,6 +72,13 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao {
         return null;
     }
 
+    /**
+     * Creates a new category in the database.
+     *
+     * @param category the category to create
+     * @return the created category with its generated ID
+     * @throws RuntimeException if a database error occurs
+     */
     @Override
     public Category create(Category category) {
         String insertQuery = "INSERT INTO categories (name, description) VALUES (?, ?)";
@@ -87,6 +107,13 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao {
         return category;
     }
 
+    /**
+     * Updates an existing category in the database.
+     *
+     * @param categoryId the ID of the category to update
+     * @param category the updated category information
+     * @throws RuntimeException if a database error occurs
+     */
     @Override
     public void update(int categoryId, Category category) {
         String updateQuery = "UPDATE categories SET name = ?, description = ? WHERE category_id = ?";
@@ -107,6 +134,12 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao {
         }
     }
 
+    /**
+     * Deletes a category from the database.
+     *
+     * @param categoryId the ID of the category to delete
+     * @throws RuntimeException if a database error occurs
+     */
     @Override
     public void delete(int categoryId) {
         String deleteQuery = "DELETE FROM categories WHERE category_id = ?";

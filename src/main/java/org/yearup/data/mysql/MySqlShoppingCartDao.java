@@ -22,6 +22,13 @@ public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDa
         super(dataSource);
     }
 
+    /**
+     * Retrieves a user's shopping cart with all items.
+     *
+     * @param userId the ID of the user
+     * @return the shopping cart containing all items for the user
+     * @throws RuntimeException if a database error occurs
+     */
     @Override
     public ShoppingCart getByUserId(int userId) {
         ShoppingCart shoppingCart = new ShoppingCart();
@@ -57,6 +64,15 @@ public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDa
         return shoppingCart;
     }
 
+    /**
+     * Adds a product to a user's shopping cart.
+     * If the product already exists, increments the quantity by 1.
+     * If the product doesn't exist, adds it with quantity 1.
+     *
+     * @param userId the ID of the user
+     * @param productId the ID of the product to add
+     * @throws RuntimeException if a database error occurs
+     */
     @Override
     public void addProductToCart(int userId, int productId) {
         String checkQuery = "SELECT quantity FROM shopping_cart WHERE user_id = ? AND product_id = ?";
@@ -87,6 +103,14 @@ public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDa
         }
     }
 
+    /**
+     * Updates the quantity of a product in a user's shopping cart.
+     *
+     * @param userId the ID of the user
+     * @param productId the ID of the product to update
+     * @param quantity the new quantity
+     * @throws RuntimeException if the product is not found in the cart or a database error occurs
+     */
     @Override
     public void updateProductQuantity(int userId, int productId, int quantity) {
         String updateQuery = "UPDATE shopping_cart SET quantity = ? WHERE user_id = ? AND product_id = ?";
@@ -107,6 +131,12 @@ public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDa
         }
     }
 
+    /**
+     * Clears all items from a user's shopping cart.
+     *
+     * @param userId the ID of the user
+     * @throws RuntimeException if a database error occurs
+     */
     @Override
     public void clearCart(int userId) {
         String deleteQuery = "DELETE FROM shopping_cart WHERE user_id = ?";

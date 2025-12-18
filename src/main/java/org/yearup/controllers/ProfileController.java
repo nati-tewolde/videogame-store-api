@@ -26,6 +26,13 @@ public class ProfileController {
         this.userDao = userDao;
     }
 
+    /**
+     * Retrieves the current user's profile information.
+     *
+     * @param principal the authenticated user
+     * @return the user's profile
+     * @throws ResponseStatusException if the profile is not found or an error occurs
+     */
     @GetMapping
     public Profile getProfile(Principal principal) {
         try {
@@ -44,6 +51,14 @@ public class ProfileController {
         }
     }
 
+    /**
+     * Updates the current user's profile information.
+     *
+     * @param profile the updated profile information
+     * @param principal the authenticated user
+     * @return the updated profile
+     * @throws ResponseStatusException if the profile is not found or an error occurs
+     */
     @PutMapping
     public Profile updateProfile(@RequestBody Profile profile, Principal principal) {
         try {

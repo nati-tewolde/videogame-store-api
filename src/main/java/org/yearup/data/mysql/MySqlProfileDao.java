@@ -16,6 +16,7 @@ public class MySqlProfileDao extends MySqlDaoBase implements ProfileDao {
         super(dataSource);
     }
 
+
     @Override
     public Profile create(Profile profile) {
         String sql = "INSERT INTO profiles (user_id, first_name, last_name, phone, email, address, city, state, zip) " +
@@ -41,6 +42,13 @@ public class MySqlProfileDao extends MySqlDaoBase implements ProfileDao {
         }
     }
 
+    /**
+     * Retrieves a user's profile by their user ID.
+     *
+     * @param userId the ID of the user
+     * @return the user's profile, or null if not found
+     * @throws RuntimeException if a database error occurs
+     */
     @Override
     public Profile getByUserId(int userId) {
         String selectQuery = "SELECT * FROM profiles WHERE user_id = ?";
@@ -62,6 +70,13 @@ public class MySqlProfileDao extends MySqlDaoBase implements ProfileDao {
         return null;
     }
 
+    /**
+     * Updates a user's profile in the database.
+     *
+     * @param userId the ID of the user
+     * @param profile the updated profile information
+     * @throws RuntimeException if the profile is not found or a database error occurs
+     */
     @Override
     public void update(int userId, Profile profile) {
         String sql = "UPDATE profiles SET " +

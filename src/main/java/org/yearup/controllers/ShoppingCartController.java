@@ -31,6 +31,13 @@ public class ShoppingCartController {
         this.productDao = productDao;
     }
 
+    /**
+     * Retrieves the current user's shopping cart.
+     *
+     * @param principal the authenticated user
+     * @return the user's shopping cart with all items
+     * @throws ResponseStatusException if an error occurs
+     */
     @GetMapping
     public ShoppingCart getCart(Principal principal) {
         try {
@@ -44,7 +51,15 @@ public class ShoppingCartController {
         }
     }
 
-
+    /**
+     * Adds a product to the current user's shopping cart.
+     * If the product already exists in the cart, its quantity is incremented by 1.
+     *
+     * @param productId the ID of the product to add
+     * @param principal the authenticated user
+     * @return the updated shopping cart
+     * @throws ResponseStatusException if the product is not found or an error occurs
+     */
     @PostMapping("/products/{productId}")
     @ResponseStatus(HttpStatus.CREATED)
     public ShoppingCart addProductToCart(@PathVariable int productId, Principal principal) {
@@ -66,6 +81,15 @@ public class ShoppingCartController {
         }
     }
 
+    /**
+     * Updates the quantity of a product in the current user's shopping cart.
+     *
+     * @param productId the ID of the product to update
+     * @param item a map containing the new quantity
+     * @param principal the authenticated user
+     * @return the updated shopping cart
+     * @throws ResponseStatusException if the quantity is invalid or an error occurs
+     */
     @PutMapping("/products/{productId}")
     public ShoppingCart updateProductInCart(@PathVariable int productId,
                                             @RequestBody ShoppingCartItem item,
@@ -88,6 +112,12 @@ public class ShoppingCartController {
         }
     }
 
+    /**
+     * Clears all items from the current user's shopping cart.
+     *
+     * @param principal the authenticated user
+     * @throws ResponseStatusException if an error occurs
+     */
     @DeleteMapping
     public ShoppingCart clearCart(Principal principal) {
         try {

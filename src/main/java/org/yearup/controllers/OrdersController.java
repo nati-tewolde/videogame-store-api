@@ -35,8 +35,17 @@ public class OrdersController {
         this.profileDao = profileDao;
     }
 
+    /**
+     * Processes checkout by converting the user's shopping cart into an order.
+     * Creates an order record and order line items for each cart item.
+     * Clears the shopping cart after successful order creation.
+     *
+     * @param principal the authenticated user
+     * @return the created order with generated order ID
+     * @throws ResponseStatusException if the cart is empty, profile is not found, or an error occurs
+     */
     @PostMapping("/orders")
-    // @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.CREATED)
     public Order checkout(Principal principal) {
         try {
             String userName = principal.getName();
@@ -44,8 +53,16 @@ public class OrdersController {
             int userId = user.getId();
 
             ShoppingCart cart = shoppingCartDao.getByUserId(userId);
+            if (cart.getItems().isEmpty())
+            {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot checkout with empty cart");
+            }
 
             Profile profile = profileDao.getByUserId(userId);
+            if (profile == null)
+            {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User profile not found");
+            }
 
             Order order = new Order();
             order.setUserId(userId);

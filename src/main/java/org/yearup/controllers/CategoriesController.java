@@ -25,12 +25,24 @@ public class CategoriesController {
         this.productDao = productDao;
     }
 
+    /**
+     * Retrieves all categories from the database.
+     *
+     * @return a list of all categories
+     */
     @GetMapping
     @PreAuthorize("permitAll()")
     public List<Category> getAll() {
         return categoryDao.getAllCategories();
     }
 
+    /**
+     * Retrieves a specific category by its ID.
+     *
+     * @param id the category ID to retrieve
+     * @return the category with the specified ID
+     * @throws ResponseStatusException if the category is not found
+     */
     @GetMapping("{id}")
     @PreAuthorize("permitAll()")
     public Category getById(@PathVariable int id) {
@@ -43,6 +55,13 @@ public class CategoriesController {
         return category;
     }
 
+    /**
+     * Retrieves all products that belong to a specific category.
+     *
+     * @param categoryId the ID of the category
+     * @return a list of products in the specified category
+     * @throws ResponseStatusException if the category is not found
+     */
     @GetMapping("{categoryId}/products")
     @PreAuthorize("permitAll()")
     public List<Product> getProductsById(@PathVariable int categoryId) {
@@ -59,6 +78,14 @@ public class CategoriesController {
         }
     }
 
+    /**
+     * Creates a new category in the database.
+     * Only administrators can perform this action.
+     *
+     * @param category the category object to create
+     * @return the newly created category with its generated ID
+     * @throws ResponseStatusException if an error occurs during creation
+     */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -70,6 +97,14 @@ public class CategoriesController {
         }
     }
 
+    /**
+     * Updates an existing category in the database.
+     * Only administrators can perform this action.
+     *
+     * @param id the ID of the category to update
+     * @param category the updated category information
+     * @throws ResponseStatusException if the category is not found or an error occurs
+     */
     @PutMapping("{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void updateCategory(@PathVariable int id, @RequestBody Category category) {
@@ -85,6 +120,13 @@ public class CategoriesController {
         }
     }
 
+    /**
+     * Deletes a category from the database.
+     * Only administrators can perform this action.
+     *
+     * @param id the ID of the category to delete
+     * @throws ResponseStatusException if the category is not found or an error occurs
+     */
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasRole('ROLE_ADMIN')")

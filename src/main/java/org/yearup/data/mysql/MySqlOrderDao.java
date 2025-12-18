@@ -16,6 +16,13 @@ public class MySqlOrderDao extends MySqlDaoBase implements OrderDao {
         super(dataSource);
     }
 
+    /**
+     * Creates a new order in the database.
+     *
+     * @param order the order to create
+     * @return the created order with its generated order ID
+     * @throws RuntimeException if a database error occurs
+     */
     @Override
     public Order create(Order order) {
         String insertQuery = "INSERT INTO orders (user_id, date, address, city, state, zip, shipping_amount) VALUES (?, ?, ?, ?, ?, ?, ?)";
