@@ -1,8 +1,8 @@
-# Ray's Golden Swirl: POS Application
+# Video Game Store (Rest API)
 
-## Description 
+## Project Description 
 
-EasyShop is a Spring Boot REST API for an online store backend. 
+Video Game Store is a Spring Boot REST API for an online video game store backend. 
 Using the associated web application, users can browse games and products by category, search and filter items, 
 login to update their profiles, manage a shopping cart, and checkout with their orders.
 Administrators can additionally create, update, and delete categories/products. 
