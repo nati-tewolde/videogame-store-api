@@ -53,14 +53,12 @@ public class OrdersController {
             int userId = user.getId();
 
             ShoppingCart cart = shoppingCartDao.getByUserId(userId);
-            if (cart.getItems().isEmpty())
-            {
+            if (cart.getItems().isEmpty()) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot checkout with empty cart");
             }
 
             Profile profile = profileDao.getByUserId(userId);
-            if (profile == null)
-            {
+            if (profile == null) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User profile not found");
             }
 

@@ -26,7 +26,6 @@ class MySqlShoppingCartDaoTest extends BaseDaoTestClass {
         ShoppingCart cart = dao.getByUserId(userId);
 
         // Assert
-        assertNotNull(cart, "Cart should not be null");
         assertTrue(cart.getItems().isEmpty(), "Cart should be empty");
         assertEquals(new BigDecimal("0"), cart.getTotal(), "Total should be 0 for empty cart");
     }
